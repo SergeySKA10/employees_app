@@ -16,12 +16,24 @@ export default class EmployeesAddForm extends Component {
         });
     }
 
+    onSubmit = (e) => {
+        e.preventDefault();
+
+        this.props.createEmpl(this.state.name, this.state.salary);
+        this.setState({
+            name: '',
+            salary: ''
+        });
+    }
+
     render() {
+
         return (
             <div className="app-add-form">
                 <h3>Добавьте нового сотрудника</h3>
                 <form
-                    className="add-form d-flex">
+                    className="add-form d-flex"
+                    onSubmit={this.onSubmit}>
                     <input type="text"
                         className="form-control new-post-label"
                         name="name"
@@ -36,7 +48,8 @@ export default class EmployeesAddForm extends Component {
                         value={this.state.salary} />
     
                     <button type="submit"
-                            className="btn btn-outline-light">Добавить</button>
+                            className="btn btn-outline-light"> Добавить
+                    </button>
                 </form>
             </div>
         );
