@@ -11,15 +11,27 @@ export default class EmployeesAddForm extends Component {
     }
 
     onValueChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
+        if (e.target.name === 'name' && e.target.value !== '') {
+            this.setState({
+                [e.target.name]: e.target.value.match(/[a-zA-Z]/gi).join('')
+            });
+        } else {
+            this.setState({
+                [e.target.name]: e.target.value.replace(/\D/g, '')
+            });
+        }
+        
     }
 
     onSubmit = (e) => {
         e.preventDefault();
 
-        this.props.createEmpl(this.state.name, this.state.salary);
+        const {name, salary} = this.state;
+        
+        if (name.length > 0 && +salary > 499) {
+            this.props.createEmpl(this.state.name, this.state.salary);
+        }
+        
         this.setState({
             name: '',
             salary: ''

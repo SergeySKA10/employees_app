@@ -65,29 +65,16 @@ export default class App extends Component {
         });
     }
 
-    onToggleIncrease = (id) => { 
+    onToggleProp = (id, prop) => { 
         this.setState(({data}) => ({
             data: data.map(item => {
                 if (item.id === id) {
-                    return {...item, increase: !item.increase}
+                    return {...item, [prop]: !item[prop]}
                 }
 
                 return item;
             })
         }));
-    }
-
-    onToggleRise = (id) => { 
-        this.setState(({data}) => {
-            const index = data.findIndex(item => item.id === id),
-                  oldObj = data[index],
-                  newObj = {...oldObj, rise: !oldObj.rise},
-                  newArr = [...data.slice(0, index), newObj, ...data.slice(index+1)];
-
-            return {
-                data: newArr
-            }
-        });
     }
 
     render() {
@@ -105,8 +92,7 @@ export default class App extends Component {
                 <EmployeesList 
                     data={this.state.data}
                     onDelete={this.deleteItem}
-                    onToggleIncrease={this.onToggleIncrease}
-                    onToggleRise={this.onToggleRise}/>
+                    onToggleProp={this.onToggleProp}/>
                 <EmployeesAddForm
                     createEmpl={this.createItem}/>
             </div>
