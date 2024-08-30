@@ -18,7 +18,7 @@ export default class App extends Component {
                 {name: 'Tomas', surname: 'Anderson', salary: 3500, increase: false, rise: false, id: 3}
             ],
             term: '',
-            atrFilter: ''
+            filter: 'all'
         }
     }
 
@@ -93,25 +93,24 @@ export default class App extends Component {
         this.setState({term});
     }
 
-    filterEmpl = (data, atr) => {
-        switch(atr) {
+    filterEmpl = (data, filter) => {
+        switch(filter) {
             case 'promotion': 
                 return data.filter(item => item.rise === true);
-            case '1000':
+            case 'more1000':
                 return data.filter(item => item.salary > 1000);
             default:
                 return data;
         }
     }
 
-    onUpdateAtrFilter = (atr) => {
-        this.setState({atrFilter: atr});
+    onUpdateFilter = (filter) => {
+        this.setState({filter});
     }
 
     render() {
-        const {data, term, atrFilter} = this.state,
-              visibleData = this.searchEmpl(data, term),
-              filterData = this.filterEmpl(visibleData, atrFilter);
+        const {data, term, filter} = this.state,
+              visibleData = this.filterEmpl(this.searchEmpl(data, term), filter);
         
         return (
             <div className="app">
@@ -121,11 +120,11 @@ export default class App extends Component {
     
                 <div className='search-panel'>
                     <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
-                    <AppFilter onUpdateAtrFilter={this.onUpdateAtrFilter}/>
+                    <AppFilter filter={filter} onUpdateFilter={this.onUpdateFilter}/>
                 </div>
     
                 <EmployeesList 
-                    data={filterData}
+                    data={visibleData}
                     onDelete={this.deleteItem}
                     onToggleProp={this.onToggleProp}/>
                 <EmployeesAddForm

@@ -1,64 +1,32 @@
-import { Component } from 'react';
+//import { Component } from 'react';
 import './app-filter.css';
 
-export default class AppFilter extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            atrFilter: ''
-        }
-    }
-
-    toggleClassBtns = (elem) => {
-        const btns = elem.parentNode.children;
-
-        for (let i = 0; i < btns.length; i++) {
-            btns[i].classList.remove('btn-light');
-
-            if (btns[i] !== elem) {
-                btns[i].classList.remove('btn-light');
-                btns[i].classList.add('btn-outline-light');
-            } else {
-                btns[i].classList.remove('btn-outline-light');
-                btns[i].classList.add('btn-light');
-            }
-        }
-    }
-
-    onUpdateAtrFilter = (e) => {
-        const atr = e.target.getAttribute('data-filter');
-
-        this.setState({atrFilter: atr});
-        this.props.onUpdateAtrFilter(atr);
-
-        this.toggleClassBtns(e.target);
-    }
-
-    render() {
-        return (
-            <div className='btn-group'>
+const AppFilter = (props) => {
+    const buttonsData = [
+        {name: 'all', label: 'Все сотрудники'},
+        {name: 'promotion', label: 'На повышение'},
+        {name: 'more1000', label: 'Зарплата больше 1000$'}
+    ],
+          buttons = buttonsData.map(({name, label}) => {
+            const active = props.filter === name,
+                  clazz = active ? 'btn-light' : 'btn-outline-light';
+            return (
                 <button 
-                    className='btn btn-light'
-                    data-filter="all"
+                    className={`btn ${clazz}`}
+                    key={name}
                     type='button'
-                    onClick={this.onUpdateAtrFilter}>
-                        Все сотрудники
+                    onClick={() => props.onUpdateFilter(name)}>
+                        {label}
                 </button>
-                <button 
-                    className='btn btn-outline-light'
-                    data-filter="promotion"
-                    type='button'
-                    onClick={this.onUpdateAtrFilter}>
-                        На повышение
-                </button>
-                <button 
-                    className='btn btn-outline-light'
-                    data-filter="1000"
-                    type='button'
-                    onClick={this.onUpdateAtrFilter}>
-                        Зарплата больше 1000$
-                </button>
-            </div>
-        );
-    }
+            )
+          })
+    
+    return (
+        <div className='btn-group'>
+           {buttons}
+        </div>
+    );
 }
+
+export default AppFilter;
+
