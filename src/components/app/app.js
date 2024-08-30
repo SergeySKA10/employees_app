@@ -16,7 +16,9 @@ export default class App extends Component {
                 {name: 'Jhon', surname: 'Smith', salary: 500, increase: true, rise: true, id: 1},
                 {name: 'Peter', surname: 'Parker', increase: false, rise: false, id: 2},
                 {name: 'Tomas', surname: 'Anderson', salary: 3500, increase: false, rise: false, id: 3}
-            ]
+            ],
+            term: '',
+            atrFilter: ''
         }
     }
 
@@ -77,20 +79,53 @@ export default class App extends Component {
         }));
     }
 
+    searchEmpl = (item, term) => {
+        if (term.length === 0) {
+            return item;
+        }
+
+        return item.filter(el => {
+            return el.name.indexOf(term) > -1 || el.surname.indexOf(term) > -1;
+        });
+    }
+
+    onUpdateSearch = (term) => {
+        this.setState({term});
+    }
+
+    filterEmpl = (data, atr) => {
+        switch(atr) {
+            case 'promotion': 
+                return data.filter(item => item.rise === true);
+            case '1000':
+                return data.filter(item => item.salary > 1000);
+            default:
+                return data;
+        }
+    }
+
+    onUpdateAtrFilter = (atr) => {
+        this.setState({atrFilter: atr});
+    }
+
     render() {
+        const {data, term, atrFilter} = this.state,
+              visibleData = this.searchEmpl(data, term),
+              filterData = this.filterEmpl(visibleData, atrFilter);
+        
         return (
             <div className="app">
                 <AppInfo 
-                    numOfEmpl={this.state.data.length}
-                    withAward={this.state.data.filter(item => item.increase === true).length}/>
+                    numOfEmpl={data.length}
+                    withAward={data.filter(item => item.increase === true).length}/>
     
                 <div className='search-panel'>
-                    <SearchPanel/>
-                    <AppFilter/>
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter onUpdateAtrFilter={this.onUpdateAtrFilter}/>
                 </div>
     
                 <EmployeesList 
-                    data={this.state.data}
+                    data={filterData}
                     onDelete={this.deleteItem}
                     onToggleProp={this.onToggleProp}/>
                 <EmployeesAddForm
